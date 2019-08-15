@@ -27,7 +27,29 @@ app.get("/api/v1/tours", (req, res) => {
     }
   });
 });
+//Use : to create a variable :id
+// Use:id? for optional param
+// Get specific tour
+app.get("/api/v1/tours/:id", (req, res) => {
+  //Send back specific tour when someone hits this route
+  const id = req.params.id * 1;
+  //Loop through the array, and find the element that has same id as the params
+  const tour = tours.find(el => el.id === id);
 
+  if (!tour) {
+    return res.status(404).json({
+      status: "fail",
+      message: "Invalid ID"
+    });
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      tour
+    }
+  });
+});
 //Post request to add a new tour to our data
 
 app.post("/api/v1/tours", (req, res) => {
@@ -53,6 +75,7 @@ app.post("/api/v1/tours", (req, res) => {
     }
   );
 });
+
 //Start server
 const port = 3000;
 app.listen(port, () => {
