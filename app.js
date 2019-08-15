@@ -1,5 +1,4 @@
 const express = require("express");
-const fs = require("fs");
 const morgan = require("morgan");
 const tourRouter = require("./routes/tourRoutes");
 const userRouter = require("./routes/userRoutes");
@@ -10,6 +9,7 @@ const app = express();
 //Use method to use middleware. Add middleware to our middleware stack
 
 //1) Middleware
+//Middleware order matters
 //Gives information about the https request
 app.use(morgan("dev"));
 
@@ -37,10 +37,7 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/tours", tourRouter);
 
 //4) Start server
-const port = 3000;
-app.listen(port, () => {
-  console.log(`App running on port ${port}...`);
-});
 
+module.exports = app;
 //What i've learned
 //Added and Mounted routers
