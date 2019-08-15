@@ -1,7 +1,9 @@
 const express = require("express");
 const tourController = require("./../controllers/tourController");
 const router = express.Router();
-
+//Param middleware
+//Each router is a mini sub application for each resource
+router.param("id", tourController.checkID);
 router
   .route("/")
   .get(tourController.getALlTours)
