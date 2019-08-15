@@ -4,16 +4,31 @@ const fs = require("fs");
 const app = express();
 
 //Middleware stands between a request and response
+//Use method to use middleware. Add middleware to our middleware stack
 app.use(express.json());
 
+app.use((req, res, next) => {
+  console.log("Hello from the middleware");
+  next();
+});
+
+app.use((req, res, next) => {
+  //Add property to our request
+  req.requestTime = new Date().toISOString();
+  next();
+});
+// The request response cycle. Middleware stands between request and response. Everything is middleware in express
+//Middleware order matters
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
 const getALlTours = (req, res) => {
+  console.log(req.requestTime);
   //Send back all of the tours when someone hits this route
   res.status(200).json({
     status: "success",
+    requestedAt: req.requestTime,
     results: tours.length, //Specify amount of results recieved
     data: {
       tours
@@ -117,8 +132,11 @@ app
   .get(getTour)
   .patch(updateTour)
   .delete(deleteTour);
+
 //Start server
 const port = 3000;
 app.listen(port, () => {
   console.log(`App running on port ${port}...`);
 });
+
+//What i've learned
