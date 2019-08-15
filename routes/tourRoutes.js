@@ -4,10 +4,11 @@ const router = express.Router();
 //Param middleware
 //Each router is a mini sub application for each resource
 router.param("id", tourController.checkID);
+
 router
   .route("/")
   .get(tourController.getALlTours)
-  .post(tourController.createTour);
+  .post(tourController.checkBody, tourController.createTour);
 
 router
   .route("/:id")
