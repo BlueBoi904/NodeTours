@@ -26,7 +26,6 @@ exports.checkBody = (req, res, next) => {
 };
 
 exports.getALlTours = (req, res) => {
-  console.log(req.requestTime);
   //Send back all of the tours when someone hits this route
   res.status(200).json({
     status: "success",
