@@ -26,6 +26,7 @@ exports.getALlTours = async (req, res) => {
 exports.getTour = async (req, res) => {
   try {
     const tour = await Tour.findById(req.params.id);
+    //Simplifed with mongoose
     //Tour.findOne({_id: req.params.id })
 
     res.status(200).json({
@@ -45,13 +46,25 @@ exports.getTour = async (req, res) => {
   // const tour = tours.find(el => el.id === id);
 };
 
-exports.updateTour = (req, res) => {
-  res.status(200).json({
-    status: "success",
-    data: {
-      tour: "<Updated tour here...>"
-    }
-  });
+exports.updateTour = async (req, res) => {
+  try {
+    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+      //Updated doc will be return by setting new: true
+      new: true,
+      runValidators: true
+    });
+    res.status(200).json({
+      status: "success",
+      data: {
+        tour
+      }
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: "fail",
+      message: err
+    });
+  }
 };
 
 exports.createTour = async (req, res) => {
