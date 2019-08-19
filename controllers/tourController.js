@@ -92,10 +92,19 @@ exports.createTour = async (req, res) => {
   //newTour.save()
 };
 
-exports.deleteTour = (req, res) => {
+exports.deleteTour = async (req, res) => {
+  //In a RESTful API, it is common not to send back any data to the client when there was a delete operation.
+  try {
+    await Tour.findByIdAndDelete(req.params.id);
+    res.status(204).json({
+      status: "success",
+      data: null
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: "fail",
+      message: "Invalid data sent"
+    });
+  }
   //204 status code means no content
-  res.status(204).json({
-    status: "success",
-    data: null
-  });
 };
