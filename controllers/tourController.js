@@ -26,6 +26,16 @@ exports.getALlTours = async (req, res) => {
       query = query.sort("-createAt");
     }
 
+    // Field limiting
+    if (req.query.fields) {
+      // Selecting certain field names is called projecting
+      const fields = req.query.fields.split(",").join(" ");
+      query = query.select(fields);
+    } else {
+      //EXCLUDE __V FIELDS
+      query = query.select("-__v");
+    }
+
     //Execute query
     const tours = await query;
 
