@@ -6,15 +6,25 @@ exports.getALlTours = async (req, res) => {
   try {
     console.log(req.query);
     //Build Query
-    //1) Filtering
+    //1A) Filtering
     const queryObject = { ...req.query };
     const excludedFields = ["page", "sort", "limit", "fields"];
     excludedFields.forEach(el => delete queryObject[el]);
 
-    //2) Advanced filtering <= >=
+    //1B) Advanced filtering <= >=
     let queryStr = JSON.stringify(queryObject);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
-    const query = Tour.find(JSON.parse(queryStr));
+
+    let query = Tour.find(JSON.parse(queryStr));
+
+    //2) Sorting
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(",").join(" ");
+      //Mongoose will auto sort based on the query param
+      query = query.sort(sortBy);
+    } else {
+      query = query.sort("-createAt");
+    }
 
     //Execute query
     const tours = await query;
