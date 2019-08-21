@@ -26,7 +26,7 @@ exports.getALlTours = async (req, res) => {
       query = query.sort("-createAt");
     }
 
-    // Field limiting
+    // 3) Field limiting
     if (req.query.fields) {
       // Selecting certain field names is called projecting
       const fields = req.query.fields.split(",").join(" ");
@@ -34,6 +34,23 @@ exports.getALlTours = async (req, res) => {
     } else {
       //EXCLUDE __V FIELDS
       query = query.select("-__v");
+    }
+
+    // 4) Pagination
+    const page = req.query.page * 1 || 1;
+
+    const limit = req.query.limit * 1 || 100;
+
+    const skip = (page - 1) * limit;
+    //limit() amount of results we want in the query
+    //skpi() the amount of results that should be skipped before querying data
+
+    //page=2&limit=10, 1-10 page 1, 11-20 page 2
+    query = query.skip(skip).limit(limit);
+
+    if (req.query.page) {
+      const numTours = await Tour.countDocuments();
+      if (skip >= numTours) throw new Error("This page does not exist.");
     }
 
     //Execute query
