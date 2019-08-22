@@ -1,5 +1,7 @@
 const fs = require("fs");
 
+const APIFeatures = require("./../utils/apiFeatures");
+
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = "5";
   req.query.sort = "-ratingsAverage,price";
@@ -11,57 +13,13 @@ const Tour = require("./../models/tourModule");
 
 exports.getALlTours = async (req, res) => {
   try {
-    console.log(req.query);
-    //Build Query
-    //1A) Filtering
-    const queryObject = { ...req.query };
-    const excludedFields = ["page", "sort", "limit", "fields"];
-    excludedFields.forEach(el => delete queryObject[el]);
-
-    //1B) Advanced filtering <= >=
-    let queryStr = JSON.stringify(queryObject);
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
-
-    let query = Tour.find(JSON.parse(queryStr));
-
-    //2) Sorting
-    if (req.query.sort) {
-      const sortBy = req.query.sort.split(",").join(" ");
-      //Mongoose will auto sort based on the query param
-      query = query.sort(sortBy);
-    } else {
-      query = query.sort("-createAt");
-    }
-
-    // 3) Field limiting
-    if (req.query.fields) {
-      // Selecting certain field names is called projecting
-      const fields = req.query.fields.split(",").join(" ");
-      query = query.select(fields);
-    } else {
-      //EXCLUDE __V FIELDS
-      query = query.select("-__v");
-    }
-
-    // 4) Pagination
-    const page = req.query.page * 1 || 1;
-
-    const limit = req.query.limit * 1 || 100;
-
-    const skip = (page - 1) * limit;
-    //limit() amount of results we want in the query
-    //skpi() the amount of results that should be skipped before querying data
-
-    //page=2&limit=10, 1-10 page 1, 11-20 page 2
-    query = query.skip(skip).limit(limit);
-
-    if (req.query.page) {
-      const numTours = await Tour.countDocuments();
-      if (skip >= numTours) throw new Error("This page does not exist.");
-    }
-
     //Execute query
-    const tours = await query;
+    const features = new APIFeatures(Tour.find(), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+    const tours = await features.query;
 
     res.status(200).json({
       status: "success",
