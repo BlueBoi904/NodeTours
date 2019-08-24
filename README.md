@@ -3,4 +3,4 @@
 # What I've learned
 
 - Created custom middleware
-- Created custom API
+- Developed REST-API endpoints in Node.js/Express
