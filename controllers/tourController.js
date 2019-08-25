@@ -1,5 +1,3 @@
-const fs = require("fs");
-
 const APIFeatures = require("./../utils/apiFeatures");
 
 exports.aliasTopTours = (req, res, next) => {
