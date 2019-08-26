@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const slugify = require("slugify");
+// const validator = require("validator");
 //Create a module using mongoose schema in order to perform CRUD operations
 //Mongoose Schema
 const tourSchema = new mongoose.Schema(
@@ -12,6 +13,7 @@ const tourSchema = new mongoose.Schema(
       trim: true,
       maxlength: [40, "A tour name must have less than 40 characters"],
       minlength: [10, "A tour name must have more than 10 characters"]
+      // validate: [validator.isAlpha, "A tour name must only contain characters"]
     },
     slug: String,
     duration: {
@@ -44,7 +46,16 @@ const tourSchema = new mongoose.Schema(
       type: Number,
       required: [true, "A tour must have a price"]
     },
-    priceDiscount: Number,
+    priceDiscount: {
+      type: Number,
+      validate: {
+        message: "Discount price ({VALUE}) should less than price",
+        validator: function(val) {
+          // 'this' only points to the current doc on new doc creation
+          return val < this.price; //Price discount = 100, price = 200 => true
+        }
+      }
+    },
     summary: {
       type: String,
       trim: true,
