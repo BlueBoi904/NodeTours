@@ -1,3 +1,4 @@
+// Middleware imports
 const express = require("express");
 const morgan = require("morgan");
 
@@ -16,7 +17,10 @@ const app = express();
 //Gives information about the https request
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
+} else {
+  app.use(morgan("default"));
 }
+
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
 
@@ -50,6 +54,7 @@ app.use(globalErrorHandler);
 //4) Start server
 
 module.exports = app;
+
 //What i've learned
 //Added and Mounted routers
 //Constructed Custom API that can handle advanced sortingand filtering
