@@ -17,8 +17,6 @@ const app = express();
 //Gives information about the https request
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
-} else {
-  app.use(morgan("default"));
 }
 
 app.use(express.json());
