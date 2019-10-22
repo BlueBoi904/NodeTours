@@ -56,3 +56,32 @@ module.exports = app;
 //What i've learned
 //Added and Mounted routers
 //Constructed Custom API that can handle advanced sortingand filtering
+
+/*
+
+Closure Definition:
+
+An inner function always has access to the 
+variables and parameters of its outer function, 
+even after the outer function has returned
+(finished excecuting).
+
+Ex:
+
+function retirement (retirementAge) {
+  var a = ' years left until retirement.';
+  return function(yearOfBirth){
+    var age = 2016 - yearOfBirth;
+    console.log((retirementAge - age) + a);
+  }
+}
+
+retirementUS = retirement(66);
+retirementJP = retirement(60);
+retirementAU = retirement(65);
+
+retirementAU(1990); => 39 years left until retirement.
+retirementUS(1990); => 40 years left until retirement.
+retirementJP(1990); => 34 years left until retirement.
+
+*/

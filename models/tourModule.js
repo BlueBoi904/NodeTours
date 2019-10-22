@@ -86,17 +86,17 @@ const tourSchema = new mongoose.Schema(
     toObject: { virtuals: true }
   }
 );
-//Virtual property
+// Virtual property
 tourSchema.virtual("durationWeeks").get(function() {
   return this.duration / 7;
 });
 
-//Document middleware: runs before .save() and .create() command
-//Presave hook
+// Document middleware: runs before .save() and .create() command
+// Presave hook
 tourSchema.pre("save", function(next) {
-  //This keyword points to the currently processed/saved document
+  // This keyword points to the currently processed/saved document
 
-  //Slugify name to add slug property to each document
+  // Slugify name to add slug property to each document
   this.slug = slugify(this.name, { lower: true });
 
   next();
