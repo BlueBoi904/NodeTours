@@ -68,20 +68,23 @@ even after the outer function has returned
 
 Ex:
 
-function retirement (retirementAge) {
+function retirement (retirementAge, country) {
   var a = ' years left until retirement.';
   return function(yearOfBirth){
     var age = 2016 - yearOfBirth;
-    console.log((retirementAge - age) + a);
+    var result = (retirementAge - age)
+    console.log(`${country}: ${result}${a}`);
   }
 }
+retirementUS = retirement(66,'US');
+retirementJP = retirement(60,'JP');
+retirementAU = retirement(65,'AU');
+retirementKO = retirement(60,'KO');
 
-retirementUS = retirement(66);
-retirementJP = retirement(60);
-retirementAU = retirement(65);
+retirementAU(1990); US: 39 years left until retirement.
+retirementUS(1990); JP: 40 years left until retirement.
+retirementJP(1990); AU: 34 years left until retirement.
+retirementKO(1990); KO: 39 years left until retirement.
 
-retirementAU(1990); => 39 years left until retirement.
-retirementUS(1990); => 40 years left until retirement.
-retirementJP(1990); => 34 years left until retirement.
 
 */
