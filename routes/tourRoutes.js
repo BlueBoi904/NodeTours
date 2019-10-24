@@ -4,6 +4,8 @@ const tourController = require("./../controllers/tourController");
 
 const router = express.Router();
 
+const authController = require("./../controllers/authController");
+
 //Param middleware
 
 //Each router is a mini sub application for each resource
@@ -17,10 +19,10 @@ router
 router.route("/tour-stats").get(tourController.getTourStats);
 
 router.route("/monthly-plan/:year").get(tourController.getMonthlyPlan);
-
+// Run protect route middleware before allowing user to get all tours
 router
   .route("/")
-  .get(tourController.getALlTours)
+  .get(authController.protect, tourController.getALlTours)
   .post(tourController.createTour);
 
 router
